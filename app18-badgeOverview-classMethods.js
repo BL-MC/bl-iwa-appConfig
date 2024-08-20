@@ -2,6 +2,7 @@
             {
                 
                 this.badges = JSON.parse(JSON.stringify(trays[0].badgeSummary.value));
+                this.stations = JSON.parse(JSON.stringify(trays[0].stationSummary.value));
                 for (let ibadge in this.badges)
                 {
                     let xcoord = (this.badges[ibadge].xpos - this.config.imageCoords.xTopLeft) / (this.config.imageCoords.xBotRight - this.config.imageCoords.xTopLeft);
@@ -24,6 +25,10 @@
                 this.siteCanvas.height = canvasHeight;
                 let siteContext = this.siteCanvas.getContext('2d');
                 siteContext.drawImage(this.siteImage, 0, 0, canvasWidth, canvasHeight );
+                for (let istation in this.stations)
+                {
+                    this.drawStation(this.stations[istation], siteContext);
+                }   
                 if (this.badges.length < 1) return;
                 for (let ibadge in this.badges)
                 {
@@ -116,4 +121,36 @@
                     }      
                 }
 
+            }
+            drawStation(station, context)
+            {
+                let xcoord = (station.xpos - this.config.imageCoords.xTopLeft) / (this.config.imageCoords.xBotRight - this.config.imageCoords.xTopLeft);
+                xcoord = Math.round(this.siteCanvas.width * xcoord);
+                let ycoord = (station.ypos - this.config.imageCoords.yTopLeft) / (this.config.imageCoords.yBotRight - this.config.imageCoords.yTopLeft);
+                ycoord = Math.round(this.siteCanvas.height * ycoord);
+
+                let rad = Math.round(this.siteCanvas.width * this.config.badgeSize / 100);
+                let xtextOff = Math.round(rad  * 0.567);
+                let ytextOff = Math.round(rad  * 0.733);
+
+                let color = this.config.station_bg;
+                let textColor = this.config.station_txt;
+                if (station.lastUpdate > this.config.stationOffline)
+                {
+                    color = this.config.stationOffline_bg;
+                    textColor = this.config.stationOffline_txt;
+                }    
+
+                let path=new Path2D();
+                path.moveTo(xcoord - rad, ycoord + rad);
+                path.lineTo(xcoord + rad, ycoord + rad);
+                path.lineTo(xcoord, ycoord - rad);
+                path.lineTo(xcoord - rad, ycoord + rad);
+                context.fillStyle = color;
+                context.fill(path);
+
+
+                context.font = rad.toString() + "px Arial";
+                context.fillStyle = textColor;
+                context.fillText(station.serialNo.toString(),xcoord - xtextOff,ycoord + ytextOff);
             }
