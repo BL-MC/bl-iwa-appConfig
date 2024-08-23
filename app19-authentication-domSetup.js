@@ -72,3 +72,4 @@
                 this.authorizeButton.innerHTML = 'Authorize';
                 this.authorizeButton.onclick = event => {this.authorize()};
                 this.authorizeButton.disabled = true;
+                this.authorizeButtonPushed = false;
