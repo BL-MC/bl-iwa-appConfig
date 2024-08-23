@@ -13,11 +13,12 @@
                     this.currentUserSpan.innerHTML = "none";
                     this.authorizeButton.disabled = false; 
                 }
-                console.log(trays[1].user.value);
+                if (this.authorizeButtonPushed) this.authorizeButton.disabled = true;
             }
             authorize()
             {
                 this.authorizeButton.disabled = true; 
+                this.authorizeButtonPushed = true;
                 let payload = {"cube": "user", "value":this.app.getCookie("Username")};
                 let actionMsg = 
                     {
